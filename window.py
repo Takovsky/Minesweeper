@@ -7,32 +7,36 @@ from PySide2.QtUiTools import QUiLoader
 from field import Field
 from game_configuration import GameConfiguration
 from gameboard import Gameboard
-
+from game import Game
+from game_configuration import GameConfiguration
 
 class Window(QWidget):
     def __init__(self):
         super(Window, self).__init__()
-        self.initUI()
-        self.drawGameboard()
 
-    def initUI(self):
+    def set(self, game):
         self.setWindowTitle("Minesweeper")
+        self.setMinimumSize(640, 480)
 
-        self.gameConfiguration = GameConfiguration()
+        gameConf = game.getGameConfiguration()
+        self.__gameboard = game.getGameboard()
 
-        self.layout = QGridLayout(self)
+        self.resizeWindow(gameConf)
 
-        ## tego chyba nie qmam
-        self.layout.setColumnStretch(1, 1)
-        self.layout.setRowStretch(1, 1)
-        
-        self.layout.addWidget(self.gameConfiguration,0 ,0)
-        self.setFixedSize(800, 600)
+        self.__layout = QGridLayout(self)
+        gameConf.setFixedHeight(100)
+        gameConf.setMaximumHeight(100)
+        self.__layout.addWidget(gameConf, 0, 0)
+        self.__layout.addWidget(self.__gameboard, 1, 0)
 
-    def drawGameboard(self):
-        self.gameboard = Gameboard(self.gameConfiguration)
-        self.layout.addWidget(self.gameboard, 1, 0)
+    def resizeWindow(self, gameConf):
+        print("DUPA")
+        size = gameConf.getSize() * 25
 
-    layout = None
-    gameConfiguration = None
-    gameboard = None
+        self.__gameboard.setFixedSize(size, size)
+
+        if size > 380:
+            self.setFixedSize(size+25, size + 125)        
+
+    __layout = None
+    __gameboard = None

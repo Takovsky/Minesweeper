@@ -8,28 +8,20 @@ class SingleGameConfiguration(QWidget):
         self.initLayout()
 
     def initWidgets(self, text, amount):
-        self.label = QLabel()
-        self.label.setText(text + ":")
-        self.label.setFixedSize(50, 20)
+        self.__label = QLabel()
+        self.__label.setText(text + ":")
         
-        self.lineEdit = QLineEdit()
-        self.lineEdit.setText(str(amount))
-        self.lineEdit.setFixedSize(50, 20)
-
-        self.button = QPushButton()
-        self.button.setText("Save")
-        self.button.setFixedSize(50, 20)
+        self.__lineEdit = QLineEdit()
+        self.__lineEdit.setText(str(amount))
 
     def initLayout(self):
-        self.layout = QGridLayout(self)
-        self.layout.addWidget(self.label, 0, 0)
-        self.layout.addWidget(self.lineEdit, 0, 1)
-        self.layout.addWidget(self.button, 0, 2)
+        self.__layout = QGridLayout(self)
+        self.__layout.addWidget(self.__label, 0, 0)
+        self.__layout.addWidget(self.__lineEdit, 0, 1)
 
     def get(self):
-        return int(self.lineEdit.text())
+        return int(self.__lineEdit.text())
 
-    layout = None
-    label = None
-    lineEdit = None
-    button = None
+    __layout = None
+    __label = None
+    __lineEdit = None

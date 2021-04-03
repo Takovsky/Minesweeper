@@ -3,31 +3,40 @@ from game_configuration import GameConfiguration
 from field import Field
 
 class Gameboard(QWidget):
-    def __init__(self, gameConfiguration):
+    def __init__(self):
         super(Gameboard, self).__init__()
+        self.__layout = QGridLayout(self)
 
-        self.mines = gameConfiguration.getMines()
-        self.size = gameConfiguration.getSize()
+    def clearLayout(self):
+        while self.__layout.count():
+            child = self.__layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
 
-        self.initLayout()
+    def resetGameboard(self):
+        self.__mines = None
+        self.__size = None
+        self.clearLayout()
+        self.__fieldsArray = []
+
+    def setGameboard(self, gameConfiguration):
+        self.resetGameboard()
+
+        self.__mines = gameConfiguration.getMines()
+        self.__size = gameConfiguration.getSize()
         self.initArray(gameConfiguration)
 
     def initArray(self, gameConfiguration):
-        for i in range(self.size - 1):
+        for i in range(self.__size):
             secondDimention = []
-            for j in range(self.size - 1):
-                field = QPushButton()
+            for j in range(self.__size):
+                field = Field()
                 secondDimention.append(field)
-                self.layout.addWidget(field, i, j)
-                self.layout.setSpacing(0)
-            self.fieldsArray.append(secondDimention)
+                self.__layout.addWidget(field, i, j)
+                self.__layout.setSpacing(0)
+            self.__fieldsArray.append(secondDimention)
 
-    def initLayout(self):
-        self.layout = QGridLayout(self)
-        self.layout.setRowStretch(self.size, self.size)
-        self.layout.setColumnStretch(self.size, self.size)
-
-    fieldsArray = []
-    layout = None
-    mines = None
-    size = None
+    __fieldsArray = []
+    __layout = None
+    __mines = None
+    __size = None

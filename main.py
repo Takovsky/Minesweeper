@@ -4,9 +4,11 @@ import os
 
 from PySide2.QtWidgets import QApplication
 from window import Window
+from scene import Scene
 
 if __name__ == "__main__":
     app = QApplication([])
-    widget = Window()
-    widget.show()
+    scene = Scene()
+    scene.setScene()
+    scene.showScene()
     sys.exit(app.exec_())
