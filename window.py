@@ -30,7 +30,6 @@ class Window(QWidget):
         self.__layout.addWidget(self.__gameboard, 1, 0)
 
     def resizeWindow(self, gameConf):
-        print("DUPA")
         size = gameConf.getSize() * 25
 
         self.__gameboard.setFixedSize(size, size)
