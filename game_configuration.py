@@ -8,8 +8,8 @@ class GameConfiguration(QWidget):
         self.initLayout()
 
     def initWidgets(self):
-        self.__minesConfiguration = SingleGameConfiguration("mines", 20)
-        self.__sizeConfiguration = SingleGameConfiguration("board size", 20)
+        self.__minesConfiguration = SingleGameConfiguration("mines", 10)
+        self.__sizeConfiguration = SingleGameConfiguration("board size", 9)
         self.__solverConfiguration = SingleGameConfiguration("solver duration [s]", 2)
         self.initButtons()
 

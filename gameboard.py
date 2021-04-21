@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QWidget, QGridLayout, QPushButton, QLineEdit
+from PySide2.QtWidgets import QWidget, QGridLayout, QPushButton, QLineEdit, QLabel
 from game_configuration import GameConfiguration
 from field import Field
 import random
@@ -31,12 +31,20 @@ class Gameboard(QWidget):
         self.initArray(gameConfiguration)
 
     def initArray(self, gameConfiguration):
+        label1 = QLabel()
+        label1.setText("Mines left: ")
+        self.__minesLeftLabel = QLabel()
+        self.__minesLeftLabel.setText(str(self.__mines))
+
+        self.__layout.addWidget(label1, 0, 0, 1, 3)
+        self.__layout.addWidget(self.__minesLeftLabel, 0, 3, 1, 3)
+        
         for i in range(self.__size):
             secondDimention = []
             for j in range(self.__size):
                 field = Field(self, i, j)
                 secondDimention.append(field)
-                self.__layout.addWidget(field, i, j)
+                self.__layout.addWidget(field, i + 1, j)
                 self.__layout.setSpacing(0)
             self.__fieldsArray.append(secondDimention)
 
@@ -55,19 +63,58 @@ class Gameboard(QWidget):
 
         return neighbors
 
-    ## tutaj brakuje odkrycia pol sasiadujacych jesli mamy juz odkryte miny dookola
-    # def uncoverFieldsNearby(self, field, neighbors):
+    def uncoverFieldsNearby(self, field, neighbors):
+        coveredMines = 0
+        for neighbor in neighbors:
+            fieldToUncover = self.__fieldsArray[neighbor.getX()][neighbor.getY()]
+            if fieldToUncover.isCovered():
+                coveredMines += 1
 
+        fieldsWith0 = []
+
+        if coveredMines >= field.getValue():
+            for neighbor in neighbors:
+                fieldToUncover = self.__fieldsArray[neighbor.getX()][neighbor.getY()]
+                if fieldToUncover.isChecked() == True:
+                    continue
+                if fieldToUncover.getValue() != 0:
+                    fieldToUncover.setFieldVisible()
+                else:
+                    fieldsWith0.append(fieldToUncover)
+
+                if fieldToUncover.isCovered() == False:
+                    fieldToUncover.setChecked(True)
+
+        for fieldToUncover in fieldsWith0:
+            self.onFieldClicked(fieldToUncover)
+                    
     def onFieldClicked(self, field):
         if self.__boardGenerated == False:
             self.generateBoard(field)
             self.__boardGenerated = True
 
+        field.setFieldVisible()
+
+        if(field.getValue() == "M"):
+            print("GAME OVER")
+
         neighbors = self.findNeighbors(field)
-        # self.uncoverFieldsNearby(field, neighbors)
+        self.uncoverFieldsNearby(field, neighbors)
+            
+    def updateLeftMines(self):
+        leftMines = self.__mines
+        for fields in self.__fieldsArray:
+            for field in fields:
+                if field.isCovered() == True:
+                    leftMines -= 1
+
+        self.__minesLeftLabel.setText(str(leftMines))
+        
 
     def generateBoard(self, field):
-        field.setValue(0)
+        if field.isChecked() == True:
+            field.setValue(0)
+
         self.generateMines(field.getCoordinates())
         self.generateRestFields()
 
@@ -81,8 +128,6 @@ class Gameboard(QWidget):
                 mineY = random.randint(0, self.__size - 1)
             field = self.__fieldsArray[mineX][mineY]
             field.setValue("M")
-            ## linijka nizej odkrywa pole - tylko dla debugu
-            field.setFieldVisible()
 
     def isMineOverlaping(self, x, y, mineX, mineY):
         if (x - 1 <= mineX and x + 1 >= mineX and
@@ -100,8 +145,6 @@ class Gameboard(QWidget):
                 if (field.getValue() == None):
                     value = self.calculateFieldValue(field)
                     field.setValue(value)
-                    ## linijka nizej odkrywa pole - tylko dla debugu
-                    field.setFieldVisible()
 
     def calculateFieldValue(self, field):
         x, y = field.getCoordinates().getCoordinates()
@@ -121,3 +164,4 @@ class Gameboard(QWidget):
     __mines = None
     __size = None
     __boardGenerated = False
+    __minesLeftLabel = None

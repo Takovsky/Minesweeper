@@ -13,25 +13,34 @@ class Field(QPushButton):
         self.setFixedSize(25, 25)
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.RightButton:
-            print(
-                "tutaj trzeba dodac obsluge prawego przysku, jako przykrycie miny mozna uzyc \"O\"")
-        else:
+        leftButton = event.button() == Qt.LeftButton
+        if leftButton == False and self.isChecked() == False:
+            self.toggleCover()
+            self.__gameboard.updateLeftMines()
+        elif self.__isCovered == False:
+            self.setChecked(True)
             self.__gameboard.onFieldClicked(self)
-            self.setFieldVisible()
+
+    def toggleCover(self):
+        self.__isCovered = self.__isCovered == False
+        text = ""
+        if self.__isCovered:
+            text = "C"
+
+        self.setText(text)
+        self.setColor(text)
 
     def setFieldVisible(self):
-        self.__isVisible = True
-        self.setEnabled(False)
-        self.setChecked(True)
-        if(self.__value != 0):
+        if self.__isCovered:
+            return
+        if self.__value != 0:
             self.setText(str(self.__value))
-            self.setColor()
+            self.setColor(self.__value)
 
-    def setColor(self):
+    def setColor(self, val):
         numbToColor = NumberToColor()
         styleSheet = self.generateStyleSheet(
-            numbToColor.getDictionary()[self.__value])
+            numbToColor.getDictionary().get(val, "black"))
         self.setStyleSheet(styleSheet)
 
     def generateStyleSheet(self, val):
@@ -49,7 +58,10 @@ class Field(QPushButton):
     def isVisible(self):
         return self.__isVisible
 
+    def isCovered(self):
+        return self.__isCovered
+
     __value = None
     __gameboard = None
     __coordinates = None
-    __isVisible = False
+    __isCovered = False

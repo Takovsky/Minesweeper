@@ -10,7 +10,7 @@ class NumberToColor():
             7: "black",
             8: "grey",
             "M": "red",
-            "O": "pink"
+            "C": "black"
         }
 
     def getDictionary(self):
