@@ -8,7 +8,6 @@ class Scene():
 
     def setScene(self):
         self.setGame()
-        # self.setSolver()
         self.setWindow()
         self.connectEvents()
 
@@ -18,7 +17,6 @@ class Scene():
 
     def setSolver(self):
         self.__solver = Solver()
-        # self.solver.set()
 
     def setWindow(self):
         self.__window = Window()
@@ -28,6 +26,7 @@ class Scene():
         self.__window.show()
 
     def connectEvents(self):
+        ## @todo: solver button connection has to be made either here or in game
         self.__game.getGameConfiguration().getManualButton().clicked.connect(self.manualButtonClicked)
 
     def manualButtonClicked(self):

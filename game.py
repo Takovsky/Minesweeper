@@ -20,6 +20,7 @@ class Game():
         self.__gameboard.setGameboard(self.__gameConfiguration)
 
     def solverButtonClicked(self):
+        ## @todo: start algorytmu
         print("solverButtonClicked")
 
     def getGameConfiguration(self):
