@@ -33,6 +33,8 @@ class Field(QPushButton):
     def setFieldVisible(self):
         if self.__isCovered:
             return
+        
+        self.setChecked(True)
         if self.__value != 0:
             self.setText(str(self.__value))
             self.setColor(self.__value)
@@ -41,6 +43,18 @@ class Field(QPushButton):
         numbToColor = NumberToColor()
         styleSheet = self.generateStyleSheet(
             numbToColor.getDictionary().get(val, "black"))
+        self.setStyleSheet(styleSheet)
+
+    def markFailed(self):
+        colorValue = NumberToColor().getDictionary().get(self.__value, "black")
+        styleSheet = self.generateStyleSheet(colorValue)
+        styleSheet += "; background-color: black"
+        self.setStyleSheet(styleSheet)
+
+    def markUnchecked(self):
+        colorValue = NumberToColor().getDictionary().get(self.__value, "black")
+        styleSheet = self.generateStyleSheet(colorValue)
+        styleSheet += "; background-color: darkgray"
         self.setStyleSheet(styleSheet)
 
     def generateStyleSheet(self, val):

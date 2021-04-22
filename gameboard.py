@@ -38,7 +38,7 @@ class Gameboard(QWidget):
 
         self.__layout.addWidget(label1, 0, 0, 1, 3)
         self.__layout.addWidget(self.__minesLeftLabel, 0, 3, 1, 3)
-        
+
         for i in range(self.__size):
             secondDimention = []
             for j in range(self.__size):
@@ -66,28 +66,76 @@ class Gameboard(QWidget):
     def uncoverFieldsNearby(self, field, neighbors):
         coveredMines = 0
         for neighbor in neighbors:
-            fieldToUncover = self.__fieldsArray[neighbor.getX()][neighbor.getY()]
+            fieldToUncover = self.__fieldsArray[neighbor.getX(
+            )][neighbor.getY()]
             if fieldToUncover.isCovered():
                 coveredMines += 1
 
-        fieldsWith0 = []
+        fieldsToUncover = []
 
         if coveredMines >= field.getValue():
             for neighbor in neighbors:
-                fieldToUncover = self.__fieldsArray[neighbor.getX()][neighbor.getY()]
+                fieldToUncover = self.__fieldsArray[neighbor.getX(
+                )][neighbor.getY()]
                 if fieldToUncover.isChecked() == True:
                     continue
-                if fieldToUncover.getValue() != 0:
+                if fieldToUncover.getValue() != 0 and fieldToUncover.getValue() != "M":
                     fieldToUncover.setFieldVisible()
-                else:
-                    fieldsWith0.append(fieldToUncover)
+                elif fieldToUncover.isCovered() == False:
+                    fieldsToUncover.append(fieldToUncover)
 
                 if fieldToUncover.isCovered() == False:
                     fieldToUncover.setChecked(True)
 
-        for fieldToUncover in fieldsWith0:
+        for fieldToUncover in fieldsToUncover:
             self.onFieldClicked(fieldToUncover)
-                    
+
+    def isGameLost(self, field):
+        return field.getValue() == "M"
+
+    def tearDownLostGame(self, field):
+        for fields in self.__fieldsArray:
+            for f in fields:
+                if f.getValue() == "M":
+                    f.setFieldVisible()
+                if f.isChecked() == False and f.isCovered() == False:
+                    f.markUnchecked()
+                f.setEnabled(False)
+
+        field.markFailed()
+
+    def isGameWon(self):
+        checkedFields = 0
+        coveredFields = 0
+        coveredMines = 0
+        for fields in self.__fieldsArray:
+            for field in fields:
+                if field.isChecked():
+                    checkedFields += 1
+                if field.isCovered():
+                    coveredFields += 1
+                    if field.getValue() == "M":
+                        coveredMines += 1
+
+        ret = (checkedFields + coveredFields == self.__size * self.__size or
+               coveredMines == self.__mines or
+               checkedFields == self.__size * self.__size - self.__mines)
+
+        return ret
+
+    def tearDownWonGame(self):
+        for fields in self.__fieldsArray:
+            for field in fields:
+                if (field.isChecked() == False and field.isCovered() == False
+                        and field.getValue() == "M"):
+                    field.toggleCover()
+                elif field.isChecked() == False and field.isCovered() == False:
+                    field.setFieldVisible()
+
+                field.setEnabled(False)
+
+        self.updateLeftMines()
+
     def onFieldClicked(self, field):
         if self.__boardGenerated == False:
             self.generateBoard(field)
@@ -95,12 +143,16 @@ class Gameboard(QWidget):
 
         field.setFieldVisible()
 
-        if(field.getValue() == "M"):
-            print("GAME OVER")
+        if self.isGameLost(field):
+            self.tearDownLostGame(field)
+            return
 
         neighbors = self.findNeighbors(field)
         self.uncoverFieldsNearby(field, neighbors)
-            
+
+        if self.isGameWon():
+            self.tearDownWonGame()
+
     def updateLeftMines(self):
         leftMines = self.__mines
         for fields in self.__fieldsArray:
@@ -109,7 +161,6 @@ class Gameboard(QWidget):
                     leftMines -= 1
 
         self.__minesLeftLabel.setText(str(leftMines))
-        
 
     def generateBoard(self, field):
         if field.isChecked() == True:
