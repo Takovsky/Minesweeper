@@ -48,6 +48,9 @@ class Gameboard(QWidget):
                 self.__layout.setSpacing(0)
             self.__fieldsArray.append(secondDimention)
 
+    def getFieldsArray(self):
+        return self.__fieldsArray
+
     def findNeighbors(self, field):
         neighbors = []
 
@@ -168,6 +171,7 @@ class Gameboard(QWidget):
 
         self.generateMines(field.getCoordinates())
         self.generateRestFields()
+        self.__boardGenerated = True
 
     def generateMines(self, coordinates):
         x, y = coordinates.getCoordinates()

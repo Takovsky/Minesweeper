@@ -39,6 +39,9 @@ class GameConfiguration(QWidget):
     def getSolverButton(self):
         return self.__solverButton
 
+    def getSolverDuration(self):
+        return self.__solverConfiguration.amount
+
     __layout = None
     __minesConfiguration = None
     __sizeConfiguration = None

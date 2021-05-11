@@ -1,5 +1,6 @@
 from game_configuration import GameConfiguration
 from gameboard import Gameboard
+from solver import Solver
 
 class Game():
     def __init__(self):
@@ -9,6 +10,7 @@ class Game():
         self.__gameConfiguration = GameConfiguration()
         self.__gameboard = Gameboard()
         self.__gameboard.setGameboard(self.__gameConfiguration)
+        self.__solver = Solver(self)
 
         # self.connectConfigurationEvents()
 
@@ -20,13 +22,14 @@ class Game():
         self.__gameboard.setGameboard(self.__gameConfiguration)
 
     def solverButtonClicked(self):
-        ## @todo: start algorytmu
-        print("solverButtonClicked")
+        """run solver"""
+        self.__solver.set()
+        self.__solver.run()
 
-    def getGameConfiguration(self):
+    def getGameConfiguration(self) -> GameConfiguration:
         return self.__gameConfiguration
 
-    def getGameboard(self):
+    def getGameboard(self) -> Gameboard:
         return self.__gameboard
 
     __gameConfiguration = None
