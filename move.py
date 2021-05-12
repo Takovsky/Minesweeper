@@ -16,3 +16,6 @@ class Move:
     
     def __repr__(self) -> str:
         return f'Move({self.field}, isMine={self.isMine})'
+
+    def __hash__(self) -> int:
+        return hash(self.field)

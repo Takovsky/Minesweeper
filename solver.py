@@ -1,6 +1,7 @@
 from random import randint
 from typing import List
 from time import sleep
+from datetime import datetime, timedelta
 
 from field import Field
 from vector import Vector
@@ -155,7 +156,8 @@ class Solver():
         return moves
 
     def run(self):
-        while True:
+        endTime = datetime.now() + timedelta(seconds = self.__gameConfiguration.getSolverDuration())
+        while datetime.now() < endTime:
             #get numbered squares and identify adjacent non clicked fields
             numbered_squares = self.getNumberedSquaresAdjacentToNonClickedFields()
 
@@ -184,6 +186,6 @@ class Solver():
             while moves:
                 move = moves.pop()
                 #sleep(solverDuration)
-                print(move)
+                #print(move)
                 move.perform(self.__gameboard)
  
