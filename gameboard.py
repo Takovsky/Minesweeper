@@ -48,6 +48,7 @@ class Gameboard(QWidget):
                 self.__layout.setSpacing(0)
             self.__fieldsArray.append(secondDimention)
 
+
     def getFieldsArray(self):
         return self.__fieldsArray
 

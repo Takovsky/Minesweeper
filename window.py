@@ -24,7 +24,7 @@ class Window(QWidget):
         self.resizeWindow(gameConf)
 
         self.__layout = QGridLayout(self)
-        gameConf.setFixedHeight(100)
+        gameConf.setFixedHeight(150)
         gameConf.setMaximumHeight(100)
         self.__layout.addWidget(gameConf, 0, 0)
         self.__layout.addWidget(self.__gameboard, 1, 0)

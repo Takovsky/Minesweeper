@@ -29,6 +29,7 @@ class Scene():
         ## @todo: solver button connection has to be made either here or in game
         self.__game.getGameConfiguration().getManualButton().clicked.connect(self.manualButtonClicked)
         self.__game.getGameConfiguration().getSolverButton().clicked.connect(self.solverButtonClicked)
+        self.__game.getGameConfiguration().getRandomButton().clicked.connect(self.randomButtonClicked)
 
     def manualButtonClicked(self):
         self.__game.manualButtonClicked()
@@ -37,6 +38,11 @@ class Scene():
     def solverButtonClicked(self):
         self.__game.solverButtonClicked()
         self.__window.resizeWindow(self.__game.getGameConfiguration())
+
+    def randomButtonClicked(self):
+        self.__game.randomButtonClicked()
+        self.__window.resizeWindow(self.__game.getGameConfiguration())
+
 
     __game = None
     __solver = None

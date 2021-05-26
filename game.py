@@ -1,6 +1,7 @@
 from game_configuration import GameConfiguration
 from gameboard import Gameboard
 from solver import Solver
+from randomSolver import RandomSolver
 
 class Game():
     def __init__(self):
@@ -11,6 +12,7 @@ class Game():
         self.__gameboard = Gameboard()
         self.__gameboard.setGameboard(self.__gameConfiguration)
         self.__solver = Solver(self)
+        self.__randomSolver = RandomSolver(self)
 
         # self.connectConfigurationEvents()
 
@@ -25,6 +27,11 @@ class Game():
         """run solver"""
         self.__solver.set()
         self.__solver.run()
+
+    def randomButtonClicked(self):
+        """run random"""
+        self.__randomSolver.set()
+        self.__randomSolver.run()
 
     def getGameConfiguration(self) -> GameConfiguration:
         return self.__gameConfiguration

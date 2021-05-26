@@ -18,6 +18,8 @@ class GameConfiguration(QWidget):
         self.__manualButton.setText("Manual")
         self.__solverButton = QPushButton(self)
         self.__solverButton.setText("Solver")
+        self.__randomButton = QPushButton(self)
+        self.__randomButton.setText("Random")
 
     def initLayout(self):
         self.__layout = QGridLayout(self)
@@ -26,6 +28,7 @@ class GameConfiguration(QWidget):
         self.__layout.addWidget(self.__solverConfiguration, 0, 2)
         self.__layout.addWidget(self.__manualButton, 1, 0)
         self.__layout.addWidget(self.__solverButton, 1, 2)
+        self.__layout.addWidget(self.__randomButton, 2, 2)
 
     def getMines(self):
         return self.__minesConfiguration.get()
@@ -42,9 +45,13 @@ class GameConfiguration(QWidget):
     def getSolverDuration(self):
         return self.__solverConfiguration.amount
 
+    def getRandomButton(self):
+        return self.__randomButton
+
     __layout = None
     __minesConfiguration = None
     __sizeConfiguration = None
     __solverConfiguration = None
     __manualButton = None
     __solverButton = None
+    __randomButton = None
