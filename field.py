@@ -3,7 +3,11 @@ from numberToColor import NumberToColor
 from coordinates import Coordinates
 from PySide2.QtCore import Qt
 
-
+"""
+self.__isCovered jesli jest true to znaczy, ze tam jest zaznaczone, ze ma byc pod tym polem mina
+field.isCovered() jesli true to zaznaczone, ze tam ma byc mina
+field.isChecked to zwraca true jak ktos juz kliknal to pole i jest odkryte
+"""
 class Field(QPushButton):
     def __init__(self, gameboard, x, y):
         super(Field, self).__init__()
@@ -11,6 +15,13 @@ class Field(QPushButton):
         self.__coordinates = Coordinates(x, y)
         self.setCheckable(True)
         self.setFixedSize(25, 25)
+    
+    def __repr__(self) -> str:
+        x, y = self.__coordinates.getCoordinates()
+        return f'Field(x={x}, y={y}, value={self.getValue()})'
+
+    def __hash__(self) -> int:
+        return hash(repr(self))
 
     def mousePressEvent(self, event):
         leftButton = event.button() == Qt.LeftButton

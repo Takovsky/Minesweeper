@@ -48,6 +48,10 @@ class Gameboard(QWidget):
                 self.__layout.setSpacing(0)
             self.__fieldsArray.append(secondDimention)
 
+
+    def getFieldsArray(self):
+        return self.__fieldsArray
+
     def findNeighbors(self, field):
         neighbors = []
 
@@ -94,6 +98,7 @@ class Gameboard(QWidget):
         return field.getValue() == "M"
 
     def tearDownLostGame(self, field):
+        print("LOST")
         for fields in self.__fieldsArray:
             for f in fields:
                 if f.getValue() == "M":
@@ -102,6 +107,7 @@ class Gameboard(QWidget):
                     f.markUnchecked()
                 f.setEnabled(False)
 
+        self.__gameWon = False
         field.markFailed()
 
     def isGameWon(self):
@@ -124,6 +130,7 @@ class Gameboard(QWidget):
         return ret
 
     def tearDownWonGame(self):
+        print("WON")
         for fields in self.__fieldsArray:
             for field in fields:
                 if (field.isChecked() == False and field.isCovered() == False
@@ -134,6 +141,7 @@ class Gameboard(QWidget):
 
                 field.setEnabled(False)
 
+        self.__gameWon = True
         self.updateLeftMines()
 
     def onFieldClicked(self, field):
@@ -168,6 +176,7 @@ class Gameboard(QWidget):
 
         self.generateMines(field.getCoordinates())
         self.generateRestFields()
+        self.__boardGenerated = True
 
     def generateMines(self, coordinates):
         x, y = coordinates.getCoordinates()
@@ -210,9 +219,16 @@ class Gameboard(QWidget):
 
         return mines
 
+    ## workaround because isGameWon doesn't work properly after TearDown
+    def getGameWon(self):
+        return self.__gameWon
+
     __fieldsArray = []
     __layout = None
     __mines = None
     __size = None
     __boardGenerated = False
     __minesLeftLabel = None
+
+    ## workaround because isGameWon doesn't work properly after TearDown
+    __gameWon = False

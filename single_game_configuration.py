@@ -4,6 +4,7 @@ from PySide2.QtWidgets import QWidget, QLineEdit, QGridLayout, QLabel, QPushButt
 class SingleGameConfiguration(QWidget):
     def __init__(self, text, amount):
         super(SingleGameConfiguration, self).__init__()
+        self.amount = amount
         self.initWidgets(text, amount)
         self.initLayout()
 
