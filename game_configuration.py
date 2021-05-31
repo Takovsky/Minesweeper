@@ -11,6 +11,7 @@ class GameConfiguration(QWidget):
         self.__minesConfiguration = SingleGameConfiguration("mines", 10)
         self.__sizeConfiguration = SingleGameConfiguration("board size", 9)
         self.__solverConfiguration = SingleGameConfiguration("solver duration [s]", 2)
+        self.__runsConfiguration = SingleGameConfiguration("runs", 1)
         self.initButtons()
 
     def initButtons(self):
@@ -26,6 +27,7 @@ class GameConfiguration(QWidget):
         self.__layout.addWidget(self.__minesConfiguration, 0, 0)
         self.__layout.addWidget(self.__sizeConfiguration, 0, 1)
         self.__layout.addWidget(self.__solverConfiguration, 0, 2)
+        self.__layout.addWidget(self.__runsConfiguration, 1, 1)
         self.__layout.addWidget(self.__manualButton, 1, 0)
         self.__layout.addWidget(self.__solverButton, 1, 2)
         self.__layout.addWidget(self.__randomButton, 2, 2)
@@ -35,6 +37,9 @@ class GameConfiguration(QWidget):
 
     def getSize(self):
         return self.__sizeConfiguration.get()
+
+    def getRuns(self):
+        return self.__runsConfiguration.get()
 
     def getManualButton(self):
         return self.__manualButton
@@ -51,6 +56,7 @@ class GameConfiguration(QWidget):
     __layout = None
     __minesConfiguration = None
     __sizeConfiguration = None
+    __runsConfiguration = None
     __solverConfiguration = None
     __manualButton = None
     __solverButton = None
