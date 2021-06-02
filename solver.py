@@ -156,8 +156,12 @@ class Solver():
         return moves
 
     def run(self):
+        self.__counter = 1
         endTime = datetime.now() + timedelta(seconds = self.__gameConfiguration.getSolverDuration())
+        breakAll = False
         while datetime.now() < endTime:
+            if breakAll:
+                break
             #get numbered squares and identify adjacent non clicked fields
             numbered_squares = self.getNumberedSquaresAdjacentToNonClickedFields()
 
@@ -183,9 +187,29 @@ class Solver():
                 break
 
             solverDuration = self.__gameConfiguration.getSolverDuration()
+            self.__result = None
             while moves:
+                self.__counter += 1
                 move = moves.pop()
                 #sleep(solverDuration)
                 #print(move)
                 move.perform(self.__gameboard)
+                lost = self.__gameboard.isGameLost(move.field)
+                won = self.__gameboard.isGameWon()
+                if lost or won:
+                    self.__result = won
+                    breakAll = True
+                    break
+                # if self.__result == None:
+                    # if self.__gameboard.isGameLost(move.field):
+                        # self.__result = False
+                    # if self.__gameboard.isGameWon():
+                        # self.__result = True
+            # self.__result = True
  
+    def getResult(self):
+        print("RESULT = " + str(self.__result))
+        separator = ";"
+        newLine = "\n"
+
+        return str(self.__counter) + separator + str(self.__game.isWon()) + newLine

@@ -27,9 +27,14 @@ class Game():
 
     def solverButtonClicked(self, runs):
         """run solver"""
+        self.prepareFileName("solver")
+        self.__logger.createFile(self.__fileName)
+        self.__logger.writeToFile(self.__fileName, self.getInitLog())
+
         for i in range(runs):
             self.__solver.set()
             self.__solver.run()
+            self.__logger.writeToFile(self.__fileName, self.__solver.getResult())
 
     def randomButtonClicked(self, runs):
         """run random"""
