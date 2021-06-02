@@ -149,6 +149,8 @@ class Solver():
         moves = []
         for i in range(len(results.values)):
             if results.isPresent(i):
+                if self.__idToFielddict[i].isChecked() == True or self.__idToFielddict[i].isCovered():
+                    continue
                 if results[i] is True:
                     moves.append(Move(self.__idToFielddict[i], isMine=True))
                 else:
@@ -157,59 +159,54 @@ class Solver():
 
     def run(self):
         self.__counter = 1
-        endTime = datetime.now() + timedelta(seconds = self.__gameConfiguration.getSolverDuration())
         breakAll = False
-        while datetime.now() < endTime:
+        while self.__gameboard.isGameWon() == False:
             if breakAll:
+                # print("breakAll")
                 break
-            #get numbered squares and identify adjacent non clicked fields
             numbered_squares = self.getNumberedSquaresAdjacentToNonClickedFields()
 
             if not numbered_squares or not self.__idToFielddict:
                 #There cannot be any solution.
+                self.__result = False
+                self.__finished = False
                 break
 
-            #create matrix based on the numbered squares
             matrix = self.createMatrix(numbered_squares)
-            
-            #gaussian eliminate the matrix
             matrix.gaussianEliminate()
-
-            #find first non zero row.
             nonZeroRow = self.findFirstNonZeroRow(matrix)
-
-            #get results
             results = self.getResults(matrix, nonZeroRow)
 
-            #create list of moves
             moves = self.getMoves(results)
             if not moves:
+                # print("no moves")
+                self.__result = False
+                self.__finished = False
                 break
 
-            solverDuration = self.__gameConfiguration.getSolverDuration()
-            self.__result = None
+            # print("moves size: " + str(len(moves)))
+            self.__finished = True
+            self.__result = False
             while moves:
                 self.__counter += 1
                 move = moves.pop()
-                #sleep(solverDuration)
-                #print(move)
                 move.perform(self.__gameboard)
-                lost = self.__gameboard.isGameLost(move.field)
+                lost = move.field.isCovered() == False and self.__gameboard.isGameLost(move.field)
                 won = self.__gameboard.isGameWon()
-                if lost or won:
-                    self.__result = won
+                if lost:
                     breakAll = True
                     break
-                # if self.__result == None:
-                    # if self.__gameboard.isGameLost(move.field):
-                        # self.__result = False
-                    # if self.__gameboard.isGameWon():
-                        # self.__result = True
-            # self.__result = True
+                elif won:
+                    self.__result = True
+                    breakAll = True
+                    self.__gameboard.tearDownWonGame()
+                    break
  
     def getResult(self):
-        print("RESULT = " + str(self.__result))
+        # print("RESULT = " + str(self.__result))
         separator = ";"
         newLine = "\n"
 
-        return str(self.__counter) + separator + str(self.__game.isWon()) + newLine
+        return (str(self.__counter) + separator + str(self.__result) 
+            + separator + str(self.__finished) 
+            + separator + str(self.__gameboard.getBoardCompletement()) + newLine)
