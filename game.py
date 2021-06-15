@@ -27,9 +27,14 @@ class Game():
 
     def solverButtonClicked(self, runs):
         """run solver"""
+        self.prepareFileName("solver")
+        self.__logger.createFile(self.__fileName)
+        self.__logger.writeToFile(self.__fileName, self.getInitLog(True))
+
         for i in range(runs):
             self.__solver.set()
             self.__solver.run()
+            self.__logger.writeToFile(self.__fileName, self.__solver.getResult())
 
     def randomButtonClicked(self, runs):
         """run random"""
@@ -60,7 +65,7 @@ class Game():
         str(self.__gameConfiguration.getMines()) + separator + 
         str(self.__gameConfiguration.getRuns())) + extention
 
-    def getInitLog(self):
+    def getInitLog(self, solver = False):
         separator = ";"
         newLine = "\n"
 
@@ -69,6 +74,9 @@ class Game():
         "SIZE" + separator  + str(self.__gameConfiguration.getSize()))
 
         secondLine = "MOVES" + separator + "WON"
+
+        if solver:
+            secondLine += separator + "FINISHED" + separator + "COMPLETEMENT"
 
         return firstLine + newLine + secondLine + newLine
 

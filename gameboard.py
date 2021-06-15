@@ -95,10 +95,15 @@ class Gameboard(QWidget):
             self.onFieldClicked(fieldToUncover)
 
     def isGameLost(self, field):
-        return field.getValue() == "M"
+        for fields in self.__fieldsArray:
+            for field in fields:
+                if field.isChecked() == True and field.getValue() == "M":
+                    return True
+
+        return False
 
     def tearDownLostGame(self, field):
-        print("LOST")
+        # print("LOST")
         for fields in self.__fieldsArray:
             for f in fields:
                 if f.getValue() == "M":
@@ -130,7 +135,7 @@ class Gameboard(QWidget):
         return ret
 
     def tearDownWonGame(self):
-        print("WON")
+        # print("WON")
         for fields in self.__fieldsArray:
             for field in fields:
                 if (field.isChecked() == False and field.isCovered() == False
@@ -150,6 +155,9 @@ class Gameboard(QWidget):
             self.__boardGenerated = True
 
         field.setFieldVisible()
+
+        # x, y = field.getCoordinates().getX(), field.getCoordinates().getY()
+        # print("onFieldClicked " + "[" + str(x) + ", " + str(y) + "]")
 
         if self.isGameLost(field):
             self.tearDownLostGame(field)
@@ -222,6 +230,15 @@ class Gameboard(QWidget):
     ## workaround because isGameWon doesn't work properly after TearDown
     def getGameWon(self):
         return self.__gameWon
+
+    def getBoardCompletement(self):
+        marked = 0
+        for fields in self.__fieldsArray:
+            for field in fields:
+                if field.isChecked() or field.isCovered():
+                    marked += 1
+
+        return marked / (self.__size * self.__size)
 
     __fieldsArray = []
     __layout = None
